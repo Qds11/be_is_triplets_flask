@@ -12,3 +12,4 @@ S3_API_HEADERS = {
     "Content-Type": "application/json",
     "X-Contacts-Key": S3_API_KEY  # Include the API key in the headers
 }
+DEFAULT_RULES = "e0eceef8136ecfaadca1aa40b2b84e2b.json"

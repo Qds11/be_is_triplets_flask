@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 import requests
 import json
 import os
-from utils.config import S3_API_HEADERS
+from utils.config import S3_API_HEADERS, DEFAULT_RULES
 
 # Load environment variables from .env.development
 load_dotenv('.env.development')
@@ -13,9 +13,8 @@ load_dotenv('.env.development')
 S3_API_URL = os.getenv('S3_API_URL')
 S3_FOLDER_NAME = os.getenv('S3_FOLDER_NAME')
 RULES_SUBFOLDER_NAME = os.getenv('RULES_SUBFOLDER_NAME')
-DEFAULT_RULES = os.getenv('DEFAULT_RULES')
 
-@credit_score_rules_bp.route('/', methods=['POST'])
+@credit_score_rules_bp.route('/fetch', methods=['POST'])
 def get_credit_score_rules():
     try:
         request_data = request.json
@@ -72,3 +71,23 @@ def get_rules(rules_file):
 
     except Exception as e:
         return jsonify({'error': f"An error occurred: {str(e)}"}), 500
+
+
+# API to update the default rules file
+@credit_score_rules_bp.route('/update', methods=['POST'])
+def update_default_rules():
+    global DEFAULT_RULES  # Modify the global default rules
+    try:
+        # Get the new rules file from the request
+        new_rules_file = request.json.get('rules_file')
+
+        if not new_rules_file:
+            return jsonify({'error': 'New rules file is required'}), 400
+
+        # Update the global DEFAULT_RULES
+        DEFAULT_RULES = new_rules_file
+
+        return jsonify({'message': 'Default rules file updated', 'new_default_rules': DEFAULT_RULES}), 200
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
