@@ -4,7 +4,7 @@ from utils.config import DEFAULT_RULES, S3
  # Import helper functions
 from helpers.api_helpers import get_source_data, get_financial_ratio, get_rules
 from helpers.error_helpers import handle_error
-from helpers.upload_file_helper import upload_file_to_s3
+from helpers.s3_helpers.upload_file_helper import upload_file_to_s3
 
 S3_FOLDER_NAME = S3["folder_name"]
 

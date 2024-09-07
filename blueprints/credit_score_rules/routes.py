@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 import requests
 import json
 from utils.config import S3, DEFAULT_RULES
-from helpers.fetch_file_helper import fetch_file_url_from_s3
+from helpers.s3_helpers.fetch_file_helper import fetch_file_url_from_s3
 from helpers.error_helpers import handle_error
 
 # Load environment variables from .env.development
