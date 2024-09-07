@@ -1,37 +1,20 @@
 from . import source_data_bp
-from flask import request, request, jsonify, send_file
-import boto3
-import os
-from dotenv import load_dotenv
+from flask import request, request, jsonify
 import requests
 import base64
-
-# Load environment variables from .env.development
-load_dotenv('.env.development')
-
-# Configure your S3 client using environment variables
-s3_client = boto3.client('s3',
-                         region_name=os.getenv('AWS_REGION'),
-                         aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
-                         aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'))
 
 @source_data_bp.route('/', methods=['POST'])
 def get_source_data():
     try:
         request_data = request.json
-        document_id = request_data.get('id', None)
+        document_url = request_data.get('url', None)
 
-        if not document_id:
-            return jsonify({'error': 'Document ID is required'}), 400
+        if not document_url:
+            return jsonify({'error': 'Document url(s) is required'}), 400
 
-        data = request.get_json()
-        file_url = data.get('url', None)
-
-        if not file_url:
-            return jsonify({'error': 'URL is required'}), 400
 
         # Step 1: Fetch the PDF from the database
-        pdf_response   = requests.get(file_url)
+        pdf_response   = requests.get(document_url)
 
         # Ensure the request was successful
         if pdf_response.status_code != 200:
