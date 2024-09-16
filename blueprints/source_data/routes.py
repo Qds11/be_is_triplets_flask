@@ -2,7 +2,10 @@ from . import source_data_bp
 from flask import request, request, jsonify
 import requests
 import base64
-
+#from helpers.encode_file_helper import encode_file
+from utils.config import OPEN_AI
+import io
+import pypdfium2 as pdfium
 @source_data_bp.route('/', methods=['POST'])
 def get_source_data():
     try:
@@ -13,7 +16,7 @@ def get_source_data():
             return jsonify({'error': 'Document url(s) is required'}), 400
 
 
-        # Step 1: Fetch the PDF from the database
+        # Step 1: Fetch the url
         pdf_response   = requests.get(document_url)
 
         # Ensure the request was successful
@@ -22,7 +25,46 @@ def get_source_data():
 
         # Step 2: Convert PDF to base64
         pdf_base64 = base64.b64encode(pdf_response.content).decode('utf-8')
+        try:
+            pdf_bytes = io.BytesIO(pdf_response.content)
+            pdf_document = pdfium.PdfDocument(pdf_bytes)
+            page = pdf_document.get_page(0)  # Convert the first page
 
+            # Render page as an image
+            pil_image = page.render(scale=2).to_pil()
+
+            # Step 3: Convert image to base64
+            buffered = io.BytesIO()
+            pil_image.save(buffered, format="JPEG")
+            jpeg_base64 = base64.b64encode(buffered.getvalue()).decode('utf-8')
+
+        except Exception as e:
+            return jsonify({'error': 'Failed to convert PDF to image', 'details': str(e)}), 500
+        #print(pdf_base64)
+
+        payload ={
+            "model": OPEN_AI["model"],
+            "messages":[
+                {
+                    "role":"user",
+                    "content":[
+                        {
+                            "type":"text",
+                            "text":"Extract data from relevant financial statements (balance sheet, income statement, cash flow statement) and return in json format e.g. {'balance_sheet':'assets':{'current_asset: {'cash': 1030, 'inventory': 3432}}, 'income_statement':..., 'cash_flow_statement':...}..."
+                        },
+                        {
+                            "type": "image_url",
+                            "image_url":{
+                                "url":f"data:image/jpeg;base64,{jpeg_base64 }"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "max_tokens":OPEN_AI["max_tokens"]
+        }
+        response = requests.post(OPEN_AI["url"],headers=OPEN_AI["headers"], json=payload)
+        print(response.json()["choices"][0]["message"]["content"])
         # Step 3: Send to OCR service
         # Step 4: Send to NLP service
         # Step 5: Store source data in the database
