@@ -7,6 +7,8 @@ from helpers.error_helpers import handle_error
 from helpers.s3_helpers.upload_file_helper import upload_file_to_s3
 
 S3_FOLDER_NAME = S3["folder_name"]
+RESULTS_SUBFOLDER_NAME = S3["results_subfolder_name"]
+
 
 @credit_score_bp.route('/', methods=['POST'])
 def get_credit_score():
@@ -27,7 +29,7 @@ def get_credit_score():
             'financial_ratio': financial_ratio,
             'rules_file': rules_file
         }
-        response_data = upload_file_to_s3("test.json",S3_FOLDER_NAME, "Results", result )
+        response_data = upload_file_to_s3("test.json",S3_FOLDER_NAME, RESULTS_SUBFOLDER_NAME, result )
 
         return jsonify(response_data), 200
 

@@ -18,9 +18,21 @@ S3 = {
         'upload': "UploadFile",
         'delete': "DeleteFile"
     },
-    "folder_name":"Alan4Testing",
-    "rules_subfolder_name": "Rules"
+    "folder_name":"CreditEvauation",
+    "rules_subfolder_name": "Rules",
+    "results_subfolder_name": "Results"
 
+}
+
+OPEN_AI = {
+    'api_key': os.getenv("OPENAI_API_KEY"),
+    'headers': {
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {os.getenv('OPENAI_API_KEY')}"  # Include the API key in the headers
+    },
+    "model":"gpt-4o",
+    "max_tokens": 300,
+    "url": "https://api.openai.com/v1/chat/completions"
 }
 
 # Default rules file
