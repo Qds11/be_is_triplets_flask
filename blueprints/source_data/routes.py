@@ -64,7 +64,7 @@ def get_source_data():
             "max_tokens":OPEN_AI["max_tokens"]
         }
         response = requests.post(OPEN_AI["url"],headers=OPEN_AI["headers"], json=payload)
-        print(response.json()["choices"][0]["message"]["content"])
+        results = response.json()["choices"][0]["message"]["content"]
         # Step 3: Send to OCR service
         # Step 4: Send to NLP service
         # Step 5: Store source data in the database

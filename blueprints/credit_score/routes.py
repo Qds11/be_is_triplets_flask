@@ -15,7 +15,6 @@ def get_credit_score():
     try:
         request_data = request.json
         document_url = request_data.get('url', None)
-        rules_file = request_data.get('rules_file', DEFAULT_RULES)
 
         if not document_url:
             return handle_error('Document URL is required', 400)
@@ -23,11 +22,13 @@ def get_credit_score():
         # Call the helper functions
         source_data = get_source_data(document_url)
         financial_ratio = get_financial_ratio(source_data)
-        rules = get_rules(rules_file)
+        rules_file = get_rules()
+        rules_file_name = rules_file["default_rules_file"]
+        rules_file_content = rules_file["default_rules"]
 
         result = {
             'financial_ratio': financial_ratio,
-            'rules_file': rules_file
+            'rules_file': rules_file_name
         }
         response_data = upload_file_to_s3("test.json",S3_FOLDER_NAME, RESULTS_SUBFOLDER_NAME, result )
 

@@ -20,7 +20,8 @@ S3 = {
     },
     "folder_name":"CreditEvauation",
     "rules_subfolder_name": "Rules",
-    "results_subfolder_name": "Results"
+    "results_subfolder_name": "Results",
+    "default_rules_filename":"Defaults.json"
 
 }
 

@@ -3,7 +3,7 @@ from utils.config import S3
 import json
 import base64
 
-def upload_file_to_s3(file_name, folder_name, subfolder_name, data):
+def upload_file_to_s3(file_name, folder_name, subfolder_name, data, override = False):
     upload_url = f"{S3['url']}/{S3['api_mapping']['upload']}"
 
     # Check for missing parameters
@@ -27,7 +27,8 @@ def upload_file_to_s3(file_name, folder_name, subfolder_name, data):
         "folderName": folder_name,
         "subFolderName": subfolder_name,
         "fileName": file_name,
-        "file": base64_string
+        "file": base64_string,
+        "override": override
     }
 
     # Send POST request to the external API
