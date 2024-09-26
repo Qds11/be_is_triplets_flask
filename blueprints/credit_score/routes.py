@@ -10,7 +10,6 @@ from helpers.auth_helpers import api_key_required
 S3_FOLDER_NAME = S3["folder_name"]
 RESULTS_SUBFOLDER_NAME = S3["results_subfolder_name"]
 
-
 @credit_score_bp.route('/', methods=['POST'])
 @api_key_required
 def get_credit_score():

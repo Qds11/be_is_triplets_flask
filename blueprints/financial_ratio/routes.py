@@ -1,9 +1,9 @@
 from . import financial_ratio_bp
-from flask import jsonify, request, url_for
-import requests
-import json
+from flask import jsonify, request
+
 @financial_ratio_bp.route('/', methods=['POST'])
 def get_financial_ratio():
+
     request_data = request.json
 
     source_data = request_data.get('source_data', None)

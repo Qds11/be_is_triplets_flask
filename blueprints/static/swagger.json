@@ -1,0 +1,279 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Credit Evaluation API",
+    "description": "API for credit score evaluation, financial ratios, and source data."
+  },
+  "host": "localhost:5000",
+  "basePath": "/",
+  "schemes": ["http"],
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
+  "paths": {
+    "/credit-score": {
+      "post": {
+        "summary": "Get Credit Score",
+        "description": "Fetch credit score for the provided URLs.",
+        "tags": ["Credit Score"],
+        "parameters": [
+          {
+            "name": "X-Contacts-Key",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": "API key for authentication"
+          },
+          {
+            "name": "urls",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "urls": {
+                  "type": "array",
+                  "items": { "type": "string" },
+                  "example": [
+                    "https://smu-bucket1.s3.ap-southeast-1.amazonaws.com/CreditEvauation/FinancialStatements/b8d37e2e"
+                  ]
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "key": {
+                  "type": "string",
+                  "example": "4ce905662aacc18495d028fb69aa21c6.json"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/credit-score-rules/default-rules/update": {
+      "post": {
+        "summary": "Update Default Rules",
+        "tags": ["Credit Score Rules"],
+        "parameters": [
+          {
+            "name": "rules_file",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "rules_file": {
+                  "type": "string",
+                  "example": "rules20240915.json"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Default rules file updated"
+                },
+                "new_default_rules_file": {
+                  "type": "string",
+                  "example": "rules20240915.json"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/credit-score-rules/upload": {
+      "post": {
+        "summary": "Upload Rules",
+        "tags": ["Credit Score Rules"],
+        "parameters": [
+          {
+            "name": "data",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "scoring_weights": {
+                  "type": "object",
+                  "properties": {
+                    "financial_ratios": {
+                      "type": "object",
+                      "properties": {
+                        "current_ratio": {
+                          "type": "object",
+                          "properties": {
+                            "weight": { "type": "number", "example": 0.3 },
+                            "ideal_range": {
+                              "type": "array",
+                              "items": { "type": "number" },
+                              "example": [1.5, 3]
+                            },
+                            "penalty_factor": {
+                              "type": "number",
+                              "example": 0.1
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "filename": { "type": "string", "example": "26092025.json" }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Rules file uploaded"
+                },
+                "key": { "type": "string", "example": "26092025.json" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/source-data": {
+      "post": {
+        "summary": "Get Source Data",
+        "tags": ["Source Data"],
+        "parameters": [
+          {
+            "name": "urls",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "urls": {
+                  "type": "array",
+                  "items": { "type": "string" },
+                  "example": [
+                    "https://smu-bucket1.s3.ap-southeast-1.amazonaws.com/CreditEvauation/FinancialStatements/b8d37e2e"
+                  ]
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "example": {
+                "balance_sheet": {
+                  "date": "December 31, 2013",
+                  "assets": {
+                    "current_assets": {
+                      "cash": 2100,
+                      "petty_cash": 100,
+                      "temporary_investments": 10000,
+                      "accounts_receivable_net": 40500,
+                      "inventory": 31000,
+                      "supplies": 3800,
+                      "prepaid_insurance": 1500,
+                      "total_current_assets": 89000
+                    },
+                    "investments": 36000,
+                    "property_plant_equipment": {
+                      "land": 5500,
+                      "land_improvements": 6500,
+                      "buildings": 180000,
+                      "equipment": 201000,
+                      "less_accum_depreciation": -56000,
+                      "net_property_plant_equipment": 337000
+                    },
+                    "intangible_assets": {
+                      "goodwill": 105000,
+                      "trade_names": 200000,
+                      "total_intangible_assets": 305000
+                    },
+                    "other_assets": 3000,
+                    "total_assets": 770000
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/financial-ratio": {
+      "post": {
+        "summary": "Get Financial Ratio",
+        "tags": ["Financial Ratio"],
+        "parameters": [
+          {
+            "name": "source_data",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "example": {
+                "balance_sheet": {
+                  "date": "December 31, 2013",
+                  "assets": {
+                    "current_assets": {
+                      "cash": 2100,
+                      "petty_cash": 100,
+                      "temporary_investments": 10000,
+                      "accounts_receivable_net": 40500,
+                      "inventory": 31000,
+                      "supplies": 3800,
+                      "prepaid_insurance": 1500,
+                      "total_current_assets": 89000
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "example": {
+                "financial_ratio": {
+                  "accounts_receivable_turnover": 12.35,
+                  "current_ratio": 1.46,
+                  "days_sales_in_accounts_receivable": 29.57,
+                  "days_sales_in_inventory": 29.78,
+                  "inventory_turnover": 12.26,
+                  "quick_ratio": 0.86,
+                  "working_capital": 28000
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
