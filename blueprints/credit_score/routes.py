@@ -1,16 +1,18 @@
 from . import credit_score_bp
-from flask import request, request, jsonify, url_for
-from utils.config import DEFAULT_RULES, S3
+from flask import request, request, jsonify
+from utils.config import S3
  # Import helper functions
 from helpers.api_helpers import get_source_data, get_financial_ratio, get_rules
 from helpers.error_helpers import handle_error
 from helpers.s3_helpers.upload_file_helper import upload_file_to_s3
+from helpers.auth_helpers import api_key_required
 
 S3_FOLDER_NAME = S3["folder_name"]
 RESULTS_SUBFOLDER_NAME = S3["results_subfolder_name"]
 
 
 @credit_score_bp.route('/', methods=['POST'])
+@api_key_required
 def get_credit_score():
     try:
         request_data = request.json

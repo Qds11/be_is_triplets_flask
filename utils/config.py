@@ -35,7 +35,7 @@ OPEN_AI = {
     "max_tokens": 300,
     "url": "https://api.openai.com/v1/chat/completions"
 }
-
+CREDIT_EVALUATION_API_KEY = os.getenv('CREDIT_EVALUATION_API_KEY')
 # Default rules file
 DEFAULT_RULES = "e0eceef8136ecfaadca1aa40b2b84e2b.json"
 
