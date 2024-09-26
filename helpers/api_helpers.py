@@ -2,10 +2,10 @@ import requests
 from flask import url_for
 import json
 # Helper function to get source data
-def get_source_data(document_url):
+def get_source_data(urls):
     source_data_url = url_for('source_data.get_source_data', _external=True)
 
-    response = requests.post(source_data_url, json={'url': document_url})
+    response = requests.post(source_data_url, json={'urls': urls})
 
     if response.status_code != 200:
         raise Exception(f"Could not retrieve source data, status code: {response.status_code}")

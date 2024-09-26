@@ -14,13 +14,13 @@ RESULTS_SUBFOLDER_NAME = S3["results_subfolder_name"]
 def get_credit_score():
     try:
         request_data = request.json
-        document_url = request_data.get('url', None)
+        urls  = request_data.get('urls', None)
 
-        if not document_url:
-            return handle_error('Document URL is required', 400)
+        if not urls or len(urls)==0:
+            return handle_error('A list of document URLs is required', 400)
 
         # Call the helper functions
-        source_data = get_source_data(document_url)
+        source_data = get_source_data(urls )
         financial_ratio = get_financial_ratio(source_data)
         rules_file = get_rules()
         rules_file_name = rules_file["default_rules_file"]

@@ -12,9 +12,9 @@ def create_app():
     from .credit_score_rules import credit_score_rules_bp
 
 
-    app.register_blueprint(financial_ratio_bp, url_prefix='/financial_ratio')
-    app.register_blueprint(source_data_bp, url_prefix='/source_data')
-    app.register_blueprint(credit_score_bp, url_prefix='/credit_score')
-    app.register_blueprint(credit_score_rules_bp, url_prefix='/credit_score_rules')
+    app.register_blueprint(financial_ratio_bp, url_prefix='/financial-ratio')
+    app.register_blueprint(source_data_bp, url_prefix='/source-data')
+    app.register_blueprint(credit_score_bp, url_prefix='/credit-score')
+    app.register_blueprint(credit_score_rules_bp, url_prefix='/credit-score-rules')
 
     return app

@@ -25,14 +25,14 @@ def get_credit_score_rules():
 
 
 # API to update the default rules file
-@credit_score_rules_bp.route('/update', methods=['POST'])
+@credit_score_rules_bp.route('/default-rules/update', methods=['POST'])
 def update_default_rules():
     try:
         # Get the new rules file from the request
         new_default_rules_file = request.json.get('rules_file')
 
         if not new_default_rules_file:
-            return handle_error('New rules file is required', 400)
+            return handle_error('New default rules file is required', 400)
 
         data = {"default_rules":new_default_rules_file}
         upload_file_to_s3(DEFAULT_RULES_FILENAME,S3_FOLDER_NAME,RULES_SUBFOLDER_NAME,data,True)
@@ -42,3 +42,19 @@ def update_default_rules():
 
     except Exception as e:
         return handle_error(f"Error updating default rules: {str(e)}", 500)
+
+# API to update the default rules file
+@credit_score_rules_bp.route('/upload', methods=['POST'])
+def upload_rules():
+    try:
+        data = request.json.get('data')
+        filename = request.json.get('filename')
+        if not data:
+            return handle_error('Data for rules file is required', 400)
+        if not filename:
+            return handle_error('New rules filename is required', 400)
+
+        key = upload_file_to_s3(filename,S3_FOLDER_NAME,RULES_SUBFOLDER_NAME,data,True)
+        return jsonify({'message':'Rules file uploaded','key':key["key"]}), 200
+    except Exception as e:
+        return handle_error(f"Error uploading rules file: {str(e)}", 500)
