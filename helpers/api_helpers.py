@@ -31,17 +31,15 @@ def get_financial_ratio(source_data):
         raise Exception(f"Failed to parse JSON from response: {str(e)}")
 
 # Helper function to get rules
-def get_rules():
-    rules_url = url_for('credit_score_rules.get_credit_score_rules', _external=True)
+def get_rules(rules_version):
 
-    # Make a POST request to the rules route with the rules_file
-    response = requests.get(rules_url)
-
-    if response.status_code != 200:
-        # Extract the error message from the response JSON
-        error_message = response.json().get('error', 'Unknown error')  # Extracting just the error message
-
+    try:
+        rules_url = url_for('credit_score_rules.get_credit_score_rules', _external=True, rules_version=rules_version)
+        # Make a POST request to the rules route with the rules_file
+        response = requests.get(rules_url)
+    except:
         # Raise the exception with the extracted error message
+        error_message = response.json().get('error', 'Unknown error')
         raise Exception(f"Could not retrieve credit score rules, status code: {response.status_code}, error: {error_message}")
 
     # Parse the JSON response
@@ -49,4 +47,4 @@ def get_rules():
         rules = response.json()
         return rules
     except json.JSONDecodeError as e:
-        raise Exception(f"Failed to parse JSON from response: {str(e)}")
+        raise Exception(f"Could not retrieve credit score rules: Failed to parse JSON from response ({str(e)})")

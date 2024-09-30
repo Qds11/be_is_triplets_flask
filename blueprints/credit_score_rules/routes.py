@@ -17,11 +17,21 @@ DEFAULT_RULES_FILENAME = S3["default_rules_filename"]
 
 @credit_score_rules_bp.route('/fetch', methods=['GET'])
 def get_credit_score_rules():
-    default_rules_file_content = get_file_content_from_key(DEFAULT_RULES_FILENAME,S3_FOLDER_NAME,RULES_SUBFOLDER_NAME)
-    default_rules_file = default_rules_file_content["default_rules"]
-    default_rules = get_file_content_from_key(default_rules_file,S3_FOLDER_NAME,RULES_SUBFOLDER_NAME)
-    return {"default_rules_file": default_rules_file,
-            "default_rules":default_rules}
+    rules_version = request.args.get('rules_version', default=None)
+
+    try:
+        # if no rules version specified, get defualt rules file
+        if rules_version == None:
+            default_rules_file_content = get_file_content_from_key(DEFAULT_RULES_FILENAME,S3_FOLDER_NAME,RULES_SUBFOLDER_NAME)
+            default_rules_file = default_rules_file_content["default_rules"]
+            rules_version = default_rules_file
+
+        rules_content = get_file_content_from_key(rules_version,S3_FOLDER_NAME,RULES_SUBFOLDER_NAME)
+        return {"rules_file": rules_version,
+                "rules":rules_content}
+    except Exception as e:
+        return handle_error(f"Error getting rules: {str(e)}", 500)
+
 
 
 # API to update the default rules file

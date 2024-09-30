@@ -1,0 +1,48 @@
+{
+  "scoring_weights": {
+    "financial_ratios": {
+      "current_ratio": {
+        "weight": 0.3,
+        "ideal_range": [1.5, 3],
+        "penalty_factor": 0.1
+      },
+      "quick_ratio": {
+        "weight": 0.2,
+        "ideal_range": [1, 2],
+        "penalty_factor": 0.1
+      },
+      "debt_to_income_ratio": {
+        "weight": 0.25,
+        "ideal_range": [0, 0.35],
+        "penalty_factor": 0.15
+      },
+      "accounts_receivable_turnover": {
+        "weight": 0.15,
+        "ideal_range": [5, 12],
+        "penalty_factor": 0.05
+      },
+      "inventory_turnover": {
+        "weight": 0.1,
+        "ideal_range": [6, 12],
+        "penalty_factor": 0.05
+      }
+    }
+  },
+  "penalties": {
+    "late_payments": {
+      "threshold": 2,
+      "penalty_points": 10
+    },
+    "bankruptcy": {
+      "penalty_points": 50
+    }
+  },
+  "risk_factors": {
+    "late_payments_threshold": 2,
+    "bankruptcy": false
+  },
+  "credit_score_range": {
+    "min_score": 300,
+    "max_score": 850
+  }
+}

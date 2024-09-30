@@ -16,6 +16,7 @@ def get_credit_score():
     try:
         request_data = request.json
         urls  = request_data.get('urls', None)
+        rules_version  = request_data.get('rules_version', None)
 
         if not urls or len(urls)==0:
             return handle_error('A list of document URLs is required', 400)
@@ -23,9 +24,9 @@ def get_credit_score():
         # Call the helper functions
         source_data = get_source_data(urls )
         financial_ratio = get_financial_ratio(source_data)
-        rules_file = get_rules()
-        rules_file_name = rules_file["default_rules_file"]
-        rules_file_content = rules_file["default_rules"]
+        rules_file = get_rules(rules_version)
+        rules_file_name = rules_file["rules_file"]
+        rules_file_content = rules_file["rules"]
 
         result = {
             'financial_ratio': financial_ratio,
