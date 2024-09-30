@@ -25,18 +25,24 @@
             "description": "API key for authentication"
           },
           {
-            "name": "urls",
+            "name": "request",
             "in": "body",
-            "required": true,
             "schema": {
               "type": "object",
+              "required": ["urls"],
               "properties": {
                 "urls": {
                   "type": "array",
                   "items": { "type": "string" },
                   "example": [
                     "https://smu-bucket1.s3.ap-southeast-1.amazonaws.com/CreditEvauation/FinancialStatements/b8d37e2e"
-                  ]
+                  ],
+                   "description": "S3 url(s) to financial document(s)"
+                },
+                "rules_version": {
+                  "type": "string",
+                  "example": "testrules20240922.json",
+                  "description": "(optional) the file name of rules file to use for credit rating formula"
                 }
               }
             }
@@ -50,7 +56,8 @@
               "properties": {
                 "key": {
                   "type": "string",
-                  "example": "4ce905662aacc18495d028fb69aa21c6.json"
+                  "example": "4ce905662aacc18495d028fb69aa21c6.json",
+                  "description": "key of file stored in S3, containing rules file used, credit rating and raw data used"
                 }
               }
             }
