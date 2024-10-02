@@ -1,5 +1,5 @@
-from helpers.s3_helpers.upload_file_helper import upload_file_to_s3
-from utils.config import  S3
+#from helpers.s3_helpers.upload_file_helper import upload_file_to_s3
+#from utils.config import  S3
 import json
 import base64
  # Import helper functions
@@ -11,7 +11,7 @@ from flask import request, request, jsonify, url_for
 # },True
 # )
 data ={
-  "default_rules": "testrules20240922.json"}
+  "latest_version": 0}
 json_string = json.dumps(data)
 
 # Convert the JSON string to bytes

@@ -105,7 +105,7 @@
         }
       }
     },
-    "/credit-score-rules/upload": {
+     "/credit-score-rules/upload": {
       "post": {
         "summary": "Upload Rules",
         "tags": ["Credit Score Rules"],
@@ -117,33 +117,32 @@
             "schema": {
               "type": "object",
               "properties": {
-                "scoring_weights": {
+                "rules": {
                   "type": "object",
-                  "properties": {
-                    "financial_ratios": {
-                      "type": "object",
-                      "properties": {
+                  "additionalProperties": true,
+                  "example": {
+                    "scoring_weights": {
+                      "financial_ratios": {
                         "current_ratio": {
-                          "type": "object",
-                          "properties": {
-                            "weight": { "type": "number", "example": 0.3 },
-                            "ideal_range": {
-                              "type": "array",
-                              "items": { "type": "number" },
-                              "example": [1.5, 3]
-                            },
-                            "penalty_factor": {
-                              "type": "number",
-                              "example": 0.1
-                            }
-                          }
+                          "weight": 0.3,
+                          "ideal_range": [1.5, 3],
+                          "penalty_factor": 0.1
                         }
                       }
                     }
                   }
                 },
-                "filename": { "type": "string", "example": "26092025.json" }
-              }
+                "description": {
+                  "type": "string",
+                  "example": "Change in liquidity ratio weight from 0.2 to 0.5"
+                },
+                "set_default": {
+                  "description": "whether the new rules should be set as the default rules",
+                  "type": "boolean",
+                  "example": true
+                }
+              },
+              "required": ["rules"]
             }
           }
         ],
@@ -157,7 +156,34 @@
                   "type": "string",
                   "example": "Rules file uploaded"
                 },
-                "key": { "type": "string", "example": "26092025.json" }
+                "key": {
+                  "type": "string",
+                  "example": "rules_v1.json"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "example": "Data for rules file is required"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "example": "Error uploading rules file: [error details]"
+                }
               }
             }
           }
