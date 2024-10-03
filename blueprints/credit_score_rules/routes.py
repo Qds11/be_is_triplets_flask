@@ -29,8 +29,9 @@ def get_credit_score_rules():
             rules_version = default_rules_file
 
         rules_content = get_file_content_from_key(rules_version,S3_FOLDER_NAME,RULES_SUBFOLDER_NAME)
-        return {"rules_file": rules_version,
-                "rules":rules_content}
+
+        return jsonify({"rules_file": rules_version,
+                "rules":rules_content}), 200
     except Exception as e:
         return handle_error(f"Error getting rules: {str(e)}", 500)
 
@@ -49,7 +50,7 @@ def update_default_rules():
     except Exception as e:
         return handle_error(f"Error updating default rules: {str(e)}", 500)
 
-# API to update the default rules file
+# API to upload new rules
 @credit_score_rules_bp.route('/upload', methods=['POST'])
 def upload_rules():
     try:
@@ -84,6 +85,27 @@ def upload_rules():
         # Upload latest version number for tracking
         upload_file_to_s3(LATEST_RULES_FILENAME,S3_FOLDER_NAME,RULES_SUBFOLDER_NAME,latest_version_data,True)
 
-        return jsonify({'message':'Rules file uploaded','key':key["key"]}), 200
+        return jsonify({'message':'Rules file uploaded','key':key["key"]}), 201
     except Exception as e:
         return handle_error(f"Error uploading rules file: {str(e)}", 500)
+
+
+# API to uploade new rules
+@credit_score_rules_bp.route('/', methods=['GET'])
+def get_rules():
+    try:
+        # Get latest rules version
+        latest_version = get_file_content_from_key(LATEST_RULES_FILENAME,S3_FOLDER_NAME,RULES_SUBFOLDER_NAME)["latest_version"]
+        rules_files = {}
+
+        for version in range(1, latest_version + 1):
+            rules = get_file_content_from_key( f"rules_v{version}.json", S3_FOLDER_NAME, RULES_SUBFOLDER_NAME)
+            # Check if the response is a dictionary and if it contains the expected data
+            if not isinstance(rules, dict):
+                    rules_files[f"rules_v{version}.json"] = "Something is wrong with this file. Unable to get file content."
+            else:
+                rules_files[f"rules_v{version}.json"] = rules
+
+        return jsonify(rules_files), 200
+    except Exception as e:
+        return handle_error(f"Error getting rules files: {str(e)}", 500)

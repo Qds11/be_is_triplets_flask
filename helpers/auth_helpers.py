@@ -2,7 +2,7 @@ from flask import request, jsonify
 from functools import wraps
 from utils.config import CREDIT_EVALUATION_API_KEY  # Import the API key from the config
 
-def api_key_required(f):
+def credit_evaluation_api_key_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         # Check if the X-Contacts-Key header is present
