@@ -41,8 +41,56 @@ def get_source_data(urls):
     # Example request content
     content = {
         "type": "text",
-        "text": """Read and populate all the data for these 3 financial statements (Balance sheet, Income Statement, Cash Flow) if any in a JSON string, please separate the different types of financial statements (bolded header) by the years (don't return any other text, just the JSON string). Please do not miss anything."""
+        "text": """Please provide the data for the following financial statements in a valid JSON format. Include all relevant information needed to calculate the following ratios: liquidity ratio, leverage ratio, profitability ratio, return on equity (ROE), debt-to-asset ratio, and operating cash flow to liabilities ratio.
+
+    Separate the different types of financial statements with bolded headers. The required fields are:
+
+    - **Balance Sheet**:
+      - Current Assets
+      - Current Liabilities
+      - Total Assets
+      - Total Liabilities
+      - Net Worth (Equity)
+
+    - **Income Statement**:
+      - Net Profit
+
+    - **Cash Flow Statement**:
+      - Operating Cash Flow
+
+    Please ensure the response is a properly formatted JSON and does not include any additional text or explanations. Thank you!
+
+    The return json should be in this format. Follow this format strictly.
+        {
+        "balance_sheet": {
+            "current_assets": {
+            "cash_and_cash_equivalents": 50000,
+            "accounts_receivable": 30000,
+            "inventory": 20000,
+            "total_current_assets": 100000
+            },
+            "current_liabilities": {
+            "accounts_payable": 20000,
+            "short_term_debt": 10000,
+            "total_current_liabilities": 30000
+            },
+            "total_assets": 250000,
+            "total_liabilities": 120000,
+            "net_worth": 130000
+        },
+        "income_statement": {
+            "net_profit": 50000
+        },
+        "cash_flow_statement": {
+            "operating_cash_flow": 60000
+        }
+        }
+
+
     }
+
+    """
+}
 
     # Construct the payload with the text and images
     payload = {
@@ -88,5 +136,5 @@ def get_source_data(urls):
 
 
 
-#get_source_data(["https://smu-bucket1.s3.ap-southeast-1.amazonaws.com/CreditEvauation/FinancialStatements/b8d37e2e2bf51c92e13185684406ca9c.pdf?X-Amz-Expires=604800&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAZ4SULJZKRVBUSV45/20241003/ap-southeast-1/s3/aws4_request&X-Amz-Date=20241003T162558Z&X-Amz-SignedHeaders=host&X-Amz-Signature=c6c5486c56791251afae7a13d3f534ee752fe25f3f9ca5ed86335dfeb5ee2c8c"])
-get_source_data(["https://smu-bucket1.s3.ap-southeast-1.amazonaws.com/CreditEvauation/FinancialStatements/d4e98a5d337d2936753c701b9531cbdb.pdf?X-Amz-Expires=604800&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAZ4SULJZKRVBUSV45/20241003/ap-southeast-1/s3/aws4_request&X-Amz-Date=20241003T175129Z&X-Amz-SignedHeaders=host&X-Amz-Signature=50451fdb2d2238733ff1d411299176842ec50d06e1054b289eed31bc216048e4","https://smu-bucket1.s3.ap-southeast-1.amazonaws.com/CreditEvauation/FinancialStatements/c3968e84796b139cdab859a89b1dd857.pdf?X-Amz-Expires=604800&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAZ4SULJZKRVBUSV45/20241003/ap-southeast-1/s3/aws4_request&X-Amz-Date=20241003T175140Z&X-Amz-SignedHeaders=host&X-Amz-Signature=2685b6e2b2f448e5b5faf1e4d916a0bd3ae54adbddcee381b2f58d24103dc3fa"])
+get_source_data(["https://smu-bucket1.s3.ap-southeast-1.amazonaws.com/CreditEvauation/FinancialStatements/b8d37e2e2bf51c92e13185684406ca9c.pdf?X-Amz-Expires=604800&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAZ4SULJZKRVBUSV45/20241003/ap-southeast-1/s3/aws4_request&X-Amz-Date=20241003T162558Z&X-Amz-SignedHeaders=host&X-Amz-Signature=c6c5486c56791251afae7a13d3f534ee752fe25f3f9ca5ed86335dfeb5ee2c8c"])
+#get_source_data(["https://smu-bucket1.s3.ap-southeast-1.amazonaws.com/CreditEvauation/FinancialStatements/d4e98a5d337d2936753c701b9531cbdb.pdf?X-Amz-Expires=604800&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAZ4SULJZKRVBUSV45/20241003/ap-southeast-1/s3/aws4_request&X-Amz-Date=20241003T175129Z&X-Amz-SignedHeaders=host&X-Amz-Signature=50451fdb2d2238733ff1d411299176842ec50d06e1054b289eed31bc216048e4","https://smu-bucket1.s3.ap-southeast-1.amazonaws.com/CreditEvauation/FinancialStatements/c3968e84796b139cdab859a89b1dd857.pdf?X-Amz-Expires=604800&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAZ4SULJZKRVBUSV45/20241003/ap-southeast-1/s3/aws4_request&X-Amz-Date=20241003T175140Z&X-Amz-SignedHeaders=host&X-Amz-Signature=2685b6e2b2f448e5b5faf1e4d916a0bd3ae54adbddcee381b2f58d24103dc3fa"])
