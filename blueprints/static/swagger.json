@@ -40,9 +40,9 @@
                    "description": "S3 url(s) to financial document(s)"
                 },
                 "rules_version": {
-                  "type": "string",
-                  "example": "testrules20240922.json",
-                  "description": "(optional) the file name of rules file to use for credit rating formula"
+                  "type": "int",
+                  "example": "4",
+                  "description": "(optional) rules version to use for credit rating formula"
                 }
               }
             }
