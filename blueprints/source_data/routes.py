@@ -1,12 +1,13 @@
 from . import source_data_bp
-from flask import request, request, jsonify
+from flask import request, jsonify
 import requests
 import base64
 #from helpers.encode_file_helper import encode_file
 from utils.config import OPEN_AI
-import io
+from io import BytesIO
 from PIL import Image  # For image handling
 import pypdfium2 as pdfium
+from pdf2image import convert_from_path
 from helpers.error_helpers import handle_error
 @source_data_bp.route('/', methods=['POST'])
 def get_source_data():

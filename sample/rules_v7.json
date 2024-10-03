@@ -1,0 +1,16 @@
+{
+  "weights": {
+    "liquidity_ratio": 1.5,
+    "leverage_ratio": 1.8,
+    "profitability_ratio": 2.0,
+    "roe_ratio": 1.2,
+    "debt_to_asset_ratio": -1.5,
+    "ocf_to_liabilities_ratio": 1.5
+  },
+  "score_range": {
+    "min_score": -10,
+    "max_score": 10,
+    "min_credit_score": 300,
+    "max_credit_score": 850
+  }
+}

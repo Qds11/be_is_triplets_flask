@@ -13,13 +13,24 @@ def get_financial_ratio():
     cash_flow_statement = source_data["cash_flow_statement"]
 
     try:
-        liquidity_activity_ratios = calculate_liquidity_activity_ratios(balance_sheet, income_statement)
+        liquidity_ratio = current_assets / current_liabilities if current_liabilities != 0 else 0
+        leverage_ratio = net_worth / total_assets if total_assets != 0 else 0
+        profitability_ratio = net_profit / total_assets if total_assets != 0 else 0
+        roe_ratio = net_profit / net_worth if net_worth != 0 else 0
+        debt_to_asset_ratio= total_liabilities / total_assets if total_assets != 0 else 0
+        ocf_to_liabilities_ratio = operating_cash_flow / total_liabilities if total_liabilities != 0 else 0
+        #liquidity_activity_ratios = calculate_liquidity_activity_ratios(balance_sheet, income_statement)
 
     except Exception as e:
         print(f"Error calculating lquidity activity ratio: {str(e)}")
         return jsonify({'error': f"Error calculating lquidity activity ratios: {str(e)}"}), 500
 
-    return liquidity_activity_ratios
+    return jsonify({"liquidity_ratio":liquidity_ratio,
+                    "leverage_ratio":leverage_ratio,
+                    "profitability_ratio":profitability_ratio,
+                    "roe_ratio":roe_ratio,
+                    "debt_to_asset_ratio":debt_to_asset_ratio,
+                    "ocf_to_liabilities_ratio":ocf_to_liabilities_ratio}),201
 
 
 
