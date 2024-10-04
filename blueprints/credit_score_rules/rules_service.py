@@ -15,3 +15,8 @@ def update_default_rules_logic(new_default_rules_file):
     default_rules_file_content = get_file_content_from_key(DEFAULT_RULES_FILENAME, S3_FOLDER_NAME, RULES_SUBFOLDER_NAME)
 
     return default_rules_file_content["default_rules"]
+
+def get_default_rule():
+    default_rules_file_content = get_file_content_from_key(DEFAULT_RULES_FILENAME,S3_FOLDER_NAME,RULES_SUBFOLDER_NAME)
+    default_rules_file = default_rules_file_content["default_rules"]
+    return default_rules_file

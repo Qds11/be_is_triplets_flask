@@ -6,7 +6,7 @@ from helpers.error_helpers import handle_error
 from helpers.s3_helpers.get_file_content import get_file_content_from_key
 from helpers.s3_helpers.upload_file_helper import upload_file_to_s3
 from datetime import datetime
-from ..credit_score_rules.rules_service import update_default_rules_logic
+from ..credit_score_rules.rules_service import update_default_rules_logic, get_default_rule
 from helpers.auth_helpers import rules_api_key_required
 
 # Fetch the API URL from the environment variables
@@ -24,9 +24,8 @@ def get_credit_score_rules():
     try:
         # if no rules version specified, get defualt rules file
         if rules_version == None:
-            default_rules_file_content = get_file_content_from_key(DEFAULT_RULES_FILENAME,S3_FOLDER_NAME,RULES_SUBFOLDER_NAME)
-            default_rules_file = default_rules_file_content["default_rules"]
-            rules_version = default_rules_file
+            rules_version = get_default_rule()
+            print(rules_version)
 
         rules_content = get_file_content_from_key(rules_version,S3_FOLDER_NAME,RULES_SUBFOLDER_NAME)
 
@@ -38,15 +37,29 @@ def get_credit_score_rules():
 
 
 # API to update the default rules file
+@credit_score_rules_bp.route('/default-rules', methods=['GET'])
+@rules_api_key_required
+def get_default_rules():
+    try:
+        rules_version = get_default_rule()
+        rules_content = get_file_content_from_key(rules_version,S3_FOLDER_NAME,RULES_SUBFOLDER_NAME)
+        return jsonify({"rules_file": rules_version,
+                "rules":rules_content}), 200
+
+    except Exception as e:
+        return handle_error(f"Error getting default rules: {str(e)}", 500)
+
+# API to update the default rules file
 @credit_score_rules_bp.route('/default-rules/update', methods=['POST'])
 @rules_api_key_required
 def update_default_rules():
     try:
         # Get the new rules file from the request
-        new_default_rules_file = request.json.get('rules_file')
-        updated_rules = update_default_rules_logic(new_default_rules_file)
+        new_default_rules_version = request.json.get('rules_version')
+        file_name = f"rules_v{new_default_rules_version}.json"
+        updated_rules = update_default_rules_logic(file_name)
 
-        return jsonify({'message': 'Default rules file updated', 'new_default_rules_file': updated_rules}), 200
+        return jsonify({'message': 'Default rules file updated', 'new_default_rules_version': updated_rules}), 200
 
     except Exception as e:
         return handle_error(f"Error updating default rules: {str(e)}", 500)
