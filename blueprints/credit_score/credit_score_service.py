@@ -35,15 +35,15 @@ def calculate_credit_score(rules_content, financial_ratios):
 
 def get_credit_grade(score):
     risk_grades = {
-        "Aaa": { "upper": 15000, "lower": 14000 },
-        "Aa": { "upper": 13999, "lower": 13000 },
-        "A": { "upper": 12999, "lower": 12000 },
-        "Baa": { "upper": 11999, "lower": 10000 },
-        "Ba": { "upper": 9999, "lower": 8000 },
-        "B": { "upper": 7999, "lower": 6000 },
-        "Caa": { "upper": 5999, "lower": 4000 },
-        "Ca": { "upper": 3999, "lower": 2000 },
-        "C": { "upper": 1999, "lower": 0 }
+        "Aaa": { "upper": 850, "lower": 800 },  # Prime
+        "Aa": { "upper": 799, "lower": 750 },   # High quality
+        "A": { "upper": 749, "lower": 700 },    # Upper-medium grade
+        "Baa": { "upper": 699, "lower": 650 },  # Medium grade, investment grade
+        "Ba": { "upper": 649, "lower": 600 },   # Speculative
+        "B": { "upper": 599, "lower": 550 },    # High risk
+        "Caa": { "upper": 549, "lower": 500 },  # Poor quality
+        "Ca": { "upper": 499, "lower": 400 },   # Very near default
+        "C": { "upper": 399, "lower": 0 }       # Default or in default
     }
 
     for grade, limits in risk_grades.items():
