@@ -7,8 +7,7 @@ from helpers.s3_helpers.get_file_content import get_file_content_from_key
 from helpers.s3_helpers.upload_file_helper import upload_file_to_s3
 from datetime import datetime
 from ..credit_score_rules.rules_service import update_default_rules_logic
-# Load environment variables from .env.development
-load_dotenv('.env.development')
+from helpers.auth_helpers import rules_api_key_required
 
 # Fetch the API URL from the environment variables
 S3_API_URL = S3["url"]
@@ -18,6 +17,7 @@ DEFAULT_RULES_FILENAME = S3["default_rules_filename"]
 LATEST_RULES_FILENAME = S3["latest_rules_filename"]
 
 @credit_score_rules_bp.route('/fetch', methods=['GET'])
+@rules_api_key_required
 def get_credit_score_rules():
     rules_version = request.args.get('rules_version', default=None)
 
@@ -39,6 +39,7 @@ def get_credit_score_rules():
 
 # API to update the default rules file
 @credit_score_rules_bp.route('/default-rules/update', methods=['POST'])
+@rules_api_key_required
 def update_default_rules():
     try:
         # Get the new rules file from the request
@@ -52,6 +53,7 @@ def update_default_rules():
 
 # API to upload new rules
 @credit_score_rules_bp.route('/upload', methods=['POST'])
+@rules_api_key_required
 def upload_rules():
     try:
         rules = request.json.get('rules')
@@ -92,6 +94,7 @@ def upload_rules():
 
 # API to uploade new rules
 @credit_score_rules_bp.route('/', methods=['GET'])
+@rules_api_key_required
 def get_rules():
     try:
         # Get latest rules version

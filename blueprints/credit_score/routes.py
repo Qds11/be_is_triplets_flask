@@ -6,7 +6,7 @@ from helpers.api_helpers import get_source_data, get_financial_ratio, get_rules
 from helpers.error_helpers import handle_error
 from helpers.s3_helpers.upload_file_helper import upload_file_to_s3
 from helpers.auth_helpers import credit_evaluation_api_key_required
-
+from .credit_score_service import calculate_credit_score, get_credit_grade
 S3_FOLDER_NAME = S3["folder_name"]
 RESULTS_SUBFOLDER_NAME = S3["results_subfolder_name"]
 
@@ -34,12 +34,22 @@ def get_credit_score():
         rules_file_name = rules_file_content["rules_file"]
         rules_file_content = rules_file_content["rules"]["rules"]
 
+        credit_score = calculate_credit_score(rules_file_content,financial_ratio)
+
+        risk_grade = get_credit_grade(credit_score)
+
+
         result = {
             'financial_ratio': financial_ratio,
             'rules_file_name':rules_file_name,
-            'rules':rules_file_content
+            'rules':rules_file_content,
+            'credit_score': credit_score,
+            'risk_grade': risk_grade,
+            'extracted_data':source_data
         }
-        
+
+        print(result)
+
         response_data = upload_file_to_s3("test.json",S3_FOLDER_NAME, RESULTS_SUBFOLDER_NAME, result )
 
         return jsonify(response_data), 200
