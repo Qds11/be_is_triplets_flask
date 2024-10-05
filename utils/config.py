@@ -39,6 +39,5 @@ OPEN_AI = {
 
 CREDIT_EVALUATION_API_KEY = os.getenv('CREDIT_EVALUATION_API_KEY')
 RULES_API_KEY = os.getenv('RULES_API_KEY')
-# Default rules file
-DEFAULT_RULES = "e0eceef8136ecfaadca1aa40b2b84e2b.json"
+
 
