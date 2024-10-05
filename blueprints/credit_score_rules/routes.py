@@ -34,21 +34,6 @@ def get_credit_score_rules():
     except Exception as e:
         return handle_error(f"Error getting rules: {str(e)}", 500)
 
-
-
-# API to update the default rules file
-@credit_score_rules_bp.route('/default-rules', methods=['GET'])
-@rules_api_key_required
-def get_default_rules():
-    try:
-        rules_version = get_default_rule()
-        rules_content = get_file_content_from_key(rules_version,S3_FOLDER_NAME,RULES_SUBFOLDER_NAME)
-        return jsonify({"rules_file": rules_version,
-                "rules":rules_content}), 200
-
-    except Exception as e:
-        return handle_error(f"Error getting default rules: {str(e)}", 500)
-
 # API to update the default rules file
 @credit_score_rules_bp.route('/default-rules/update', methods=['POST'])
 @rules_api_key_required

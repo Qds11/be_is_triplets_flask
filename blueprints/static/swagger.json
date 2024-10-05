@@ -108,37 +108,6 @@
         ]
       }
     },
-    "/credit-score-rules/default-rules": {
-      "get": {
-        "summary": "Get Default Rules",
-        "description": "Get the default credit score rules.",
-        "tags": ["Credit Score Rules"],
-        "responses": {
-          "200": {
-            "description": "Default rules retrieved successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "rules_file": { "type": "string" },
-                    "rules": { "type": "object" }
-                  }
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Error retrieving default rules"
-          }
-        },
-        "security": [
-          {
-            "apiKeyAuth": []
-          }
-        ]
-      }
-    },
     "/credit-score-rules": {
       "get": {
         "summary": "Get All Rules Versions",
