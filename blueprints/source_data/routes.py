@@ -1,10 +1,11 @@
 from . import source_data_bp
 from flask import request, jsonify
-
+from helpers.auth_helpers import credit_evaluation_api_key_required
 from helpers.error_helpers import handle_error
 from .source_data_service import ocr_method
 
 @source_data_bp.route('/', methods=['POST'])
+@credit_evaluation_api_key_required
 def get_source_data():
     try:
         request_data = request.json

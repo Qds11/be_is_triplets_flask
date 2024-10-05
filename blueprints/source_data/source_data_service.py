@@ -3,6 +3,7 @@ import requests
 from pdf2image import convert_from_bytes
 from io import BytesIO
 import json
+from PIL import Image, ImageEnhance
 from flask import jsonify
 from utils.config import OPEN_AI
 # OpenAI API Key
@@ -13,20 +14,33 @@ def encode_image(image):
     image.save(buffered, format="JPEG")
     return base64.b64encode(buffered.getvalue()).decode('utf-8')
 
-def ocr_method(urls):
+# Function to adjust the contrast of an image
+def adjust_contrast(image, factor):
+    """Adjust the contrast of the image."""
+    enhancer = ImageEnhance.Contrast(image)
+    return enhancer.enhance(factor)
+
+def ocr_method(urls, contrast_factor=1.5):
     all_base64_images = []  # Initialize a 1D list for all base64 images
 
     for url in urls:
         # Download the PDF from the URL
-
         pdf_response = requests.get(url)
-
 
         # Ensure the request was successful
         if pdf_response.status_code != 200:
             return jsonify({'error': f'Failed to download the PDF from {url}'}), 500
         # Convert the PDF (downloaded as a byte stream) into images using convert_from_bytes
         images = convert_from_bytes(pdf_response.content)
+
+            # Process each image: adjust contrast and encode to Base64
+        for image in images:
+            # Adjust the contrast of the image
+            adjusted_image = adjust_contrast(image, contrast_factor)
+
+            # Encode each adjusted image and add to the main list
+            base64_image = encode_image(adjusted_image)
+            all_base64_images.append(base64_image)  # Combine images into one list
 
         # Encode each image and extend the main list
         base64_images = [encode_image(image) for image in images]
@@ -43,7 +57,7 @@ def ocr_method(urls):
         "type": "text",
         "text": """Please provide the data for the following financial statements in a valid JSON format. Include all relevant information needed to calculate the following ratios: liquidity ratio, leverage ratio, profitability ratio, return on equity (ROE), debt-to-asset ratio, and operating cash flow to liabilities ratio.
 
-    Separate the different types of financial statements with bolded headers. The required fields are:
+    Separate the different types of financial statements with bolded headers. Please be very accurate in generating the values, take the latest values, the required fields are:
 
     - **Balance Sheet**:
       - Current Assets
@@ -76,8 +90,6 @@ def ocr_method(urls):
             "operating_cash_flow": 60000
         }
         }
-
-
     }
 
     """
