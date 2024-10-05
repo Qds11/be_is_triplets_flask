@@ -2,7 +2,7 @@ from . import credit_score_bp
 from flask import request, request, jsonify
 from utils.config import S3
  # Import helper functions
-from helpers.api_helpers import get_source_data, get_financial_ratio, get_rules
+from helpers.service_helpers import get_source_data, get_financial_ratio, get_rules
 from helpers.error_helpers import handle_error
 from helpers.s3_helpers.upload_file_helper import upload_file_to_s3
 from helpers.auth_helpers import credit_evaluation_api_key_required
