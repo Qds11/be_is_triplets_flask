@@ -2,7 +2,7 @@ import os
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
-#load_dotenv(".env.development")
+load_dotenv()
 
 # S3 Configuration
 S3 = {
@@ -39,5 +39,4 @@ OPEN_AI = {
 
 CREDIT_EVALUATION_API_KEY = os.getenv('CREDIT_EVALUATION_API_KEY')
 RULES_API_KEY = os.getenv('RULES_API_KEY')
-
 
