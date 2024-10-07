@@ -55,7 +55,7 @@ def upload_rules_service(rules, description='', set_default=False):
         latest_version_data = {"latest_version": current_version}
 
         if set_default:
-            update_default_rules_logic(filename)  # Call the logic to update default rules
+            update_default_rules(filename)  # Call the logic to update default rules
 
         # Upload latest version number for tracking
         upload_file_to_s3(LATEST_RULES_FILENAME, S3_FOLDER_NAME, RULES_SUBFOLDER_NAME, latest_version_data, True)
