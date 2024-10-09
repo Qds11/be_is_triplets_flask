@@ -29,8 +29,9 @@ def get_default_rule():
 def fetch_rules(rules_version=None):
     if not rules_version:
         rules_version = get_default_rule()
-    rules_content = get_file_content_from_key(rules_version, S3_FOLDER_NAME, RULES_SUBFOLDER_NAME)
-    return {"rules_file": rules_version, "rules": rules_content}
+    rules_file = f"rules_v{rules_version}.json"
+    rules_content = get_file_content_from_key(rules_file, S3_FOLDER_NAME, RULES_SUBFOLDER_NAME)
+    return {"rules_file": rules_file, "rules": rules_content}
 
 # Logic to upload new rules
 def upload_rules_service(rules, description='', set_default=False):
