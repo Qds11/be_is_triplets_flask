@@ -55,7 +55,7 @@ def ocr_method(urls, contrast_factor=1.5):
     # Example request content
     content = {
         "type": "text",
-        "text": """Please provide the data for the following financial statements in a valid JSON format. Include all relevant information needed to calculate the following ratios: liquidity ratio, leverage ratio, profitability ratio, return on equity (ROE), debt-to-asset ratio, and operating cash flow to liabilities ratio.
+        "text": """Please provide the data for the following financial statements (in the images provided) in a valid JSON format.
 
     Separate the different types of financial statements with bolded headers. Please be very accurate in generating the values, take the latest values, the required fields are:
 
@@ -129,7 +129,9 @@ def ocr_method(urls, contrast_factor=1.5):
     end_index = content.rfind('}') + 1
 
     # Extract the JSON portion from the string
+    print("content",content)
     json_string = content[start_index:end_index]
+
     json_data = json.loads(json_string)
 
     # Print or return the extracted JSON data
