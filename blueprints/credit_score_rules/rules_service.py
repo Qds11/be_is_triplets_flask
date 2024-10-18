@@ -29,8 +29,12 @@ def get_default_rule():
 def fetch_rules(rules_version=None):
     if not rules_version:
         rules_version = get_default_rule()
-    rules_content = get_file_content_from_key(rules_version, S3_FOLDER_NAME, RULES_SUBFOLDER_NAME)
-    return {"rules_file": rules_version, "rules": rules_content}
+
+    print("Rules version:", rules_version)
+    rules_file = f"rules_v{rules_version}.json"
+
+    rules_content = get_file_content_from_key(rules_file, S3_FOLDER_NAME, RULES_SUBFOLDER_NAME)
+    return {"rules_file": rules_file, "rules": rules_content}
 
 # Logic to upload new rules
 def upload_rules_service(rules, description='', set_default=False):
@@ -48,16 +52,14 @@ def upload_rules_service(rules, description='', set_default=False):
         # Get latest rules version
         latest_version = get_file_content_from_key(LATEST_RULES_FILENAME, S3_FOLDER_NAME, RULES_SUBFOLDER_NAME)["latest_version"]
         current_version = latest_version + 1
+        print("latest_version: ",latest_version)
         filename = f"rules_v{current_version}.json"
 
         # Upload new rules version file
         key = upload_file_to_s3(filename, S3_FOLDER_NAME, RULES_SUBFOLDER_NAME, rules_content, True)
         latest_version_data = {"latest_version": current_version}
-
         if set_default:
-            update_default_rules(filename)  # Call the logic to update default rules
-
-        # Upload latest version number for tracking
+            update_default_rules(current_version)  # Call the logic to update default rules
         upload_file_to_s3(LATEST_RULES_FILENAME, S3_FOLDER_NAME, RULES_SUBFOLDER_NAME, latest_version_data, True)
 
         return {'message': 'Rules file uploaded', 'key': key["key"]}

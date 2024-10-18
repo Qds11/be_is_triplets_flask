@@ -27,8 +27,6 @@ def rules_api_key_required(f):
         if not api_key:
             return jsonify({"error": "API key is missing"}), 401
         # Validate the API key from the config
-        print("api_key",api_key)
-        print("RULES_API_KEY",RULES_API_KEY)
         if api_key != RULES_API_KEY:
             return jsonify({"error": "Unauthorized. Invalid API key"}), 401
 
