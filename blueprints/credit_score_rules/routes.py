@@ -1,11 +1,16 @@
-from . import credit_score_rules_bp
-from flask import request, jsonify
-from ..credit_score_rules.rules_service import fetch_rules, update_default_rules, upload_rules_service, get_all_rules
-from helpers.auth_helpers import rules_api_key_required
+from flask import jsonify, request
+
+from helpers.auth_helpers import admin_api_key_required
 from helpers.error_helpers import handle_error
 
+from ..credit_score_rules.rules_service import (fetch_rules, get_all_rules,
+                                                update_default_rules,
+                                                upload_rules_service)
+from . import credit_score_rules_bp
+
+
 @credit_score_rules_bp.route('/fetch', methods=['GET'])
-@rules_api_key_required
+@admin_api_key_required
 def get_credit_score_rules():
     rules_version = request.args.get('rules_version', default=None)
     try:
@@ -15,7 +20,7 @@ def get_credit_score_rules():
         return handle_error(f"Error fetching rules: {str(e)}", 500)
 
 @credit_score_rules_bp.route('/default-rules/update', methods=['POST'])
-@rules_api_key_required
+@admin_api_key_required
 def update_default_rules_route():
     try:
         new_default_rules_version = request.json.get('rules_version')
@@ -25,7 +30,7 @@ def update_default_rules_route():
         return handle_error(f"Error updating default rules: {str(e)}", 500)
 
 @credit_score_rules_bp.route('/upload', methods=['POST'])
-@rules_api_key_required
+@admin_api_key_required
 def upload_rules_route():
     try:
         rules = request.json.get('rules')
@@ -41,7 +46,7 @@ def upload_rules_route():
         return handle_error(f"Error uploading rules file: {str(e)}", 500)
 
 @credit_score_rules_bp.route('/', methods=['GET'])
-@rules_api_key_required
+@admin_api_key_required
 def get_all_rules_route():
     try:
         rules_files = get_all_rules()

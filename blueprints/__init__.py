@@ -23,11 +23,13 @@ def create_app():
     from .source_data import source_data_bp
     from .credit_score import credit_score_bp
     from .credit_score_rules import credit_score_rules_bp
+    from .risk_grade import risk_grade_bp
 
     app.register_blueprint(swaggerui_blueprint, url_prefix=SWAGGER_URL)
     app.register_blueprint(financial_ratio_bp, url_prefix='/financial-ratio')
     app.register_blueprint(source_data_bp, url_prefix='/source-data')
     app.register_blueprint(credit_score_bp, url_prefix='/credit-score')
     app.register_blueprint(credit_score_rules_bp, url_prefix='/credit-score-rules')
+    app.register_blueprint(risk_grade_bp, url_prefix='/risk-grade')
 
     return app

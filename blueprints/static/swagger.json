@@ -65,6 +65,294 @@
         }
       }
     },
+    "/source-data": {
+      "post": {
+        "summary": "Get Source Data",
+        "tags": ["Source Data"],
+        "parameters": [
+          {
+            "name": "urls",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "urls": {
+                  "type": "array",
+                  "items": { "type": "string" },
+                  "example": [
+                    "https://smu-bucket1.s3.ap-southeast-1.amazonaws.com/CreditEvauation/FinancialStatements/b8d37e2e"
+                  ]
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "example": {
+                "balance_sheet": {
+                  "date": "December 31, 2013",
+                  "assets": {
+                    "current_assets": {
+                      "cash": 2100,
+                      "petty_cash": 100,
+                      "temporary_investments": 10000,
+                      "accounts_receivable_net": 40500,
+                      "inventory": 31000,
+                      "supplies": 3800,
+                      "prepaid_insurance": 1500,
+                      "total_current_assets": 89000
+                    },
+                    "investments": 36000,
+                    "property_plant_equipment": {
+                      "land": 5500,
+                      "land_improvements": 6500,
+                      "buildings": 180000,
+                      "equipment": 201000,
+                      "less_accum_depreciation": -56000,
+                      "net_property_plant_equipment": 337000
+                    },
+                    "intangible_assets": {
+                      "goodwill": 105000,
+                      "trade_names": 200000,
+                      "total_intangible_assets": 305000
+                    },
+                    "other_assets": 3000,
+                    "total_assets": 770000
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/financial-ratio": {
+      "post": {
+        "summary": "Get Financial Ratio",
+        "tags": ["Financial Ratio"],
+        "parameters": [
+          {
+            "name": "source_data",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "example": {
+                "balance_sheet": {
+                  "date": "December 31, 2013",
+                  "assets": {
+                    "current_assets": {
+                      "cash": 2100,
+                      "petty_cash": 100,
+                      "temporary_investments": 10000,
+                      "accounts_receivable_net": 40500,
+                      "inventory": 31000,
+                      "supplies": 3800,
+                      "prepaid_insurance": 1500,
+                      "total_current_assets": 89000
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "example": {
+                "financial_ratio": {
+                  "accounts_receivable_turnover": 12.35,
+                  "current_ratio": 1.46,
+                  "days_sales_in_accounts_receivable": 29.57,
+                  "days_sales_in_inventory": 29.78,
+                  "inventory_turnover": 12.26,
+                  "quick_ratio": 0.86,
+                  "working_capital": 28000
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/risk-grade": {
+      "get": {
+        "summary": "Get Risk Grade by Credit Score",
+        "tags": ["Risk Grade"],
+        "description": "Fetch the risk grade based on a given credit score. Optionally, provide a risk_grade_version to fetch a specific version.",
+        "parameters": [
+          {
+            "name": "credit_score",
+            "in": "query",
+            "required": true,
+            "description": "Credit score for which to retrieve the risk grade.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "risk_grade_version",
+            "in": "query",
+            "required": false,
+            "description": "(Optional) Version of the risk grade table to use.",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Risk grade retrieved successfully.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "credit_score": { "type": "integer" },
+                "risk_grade": { "type": "string" }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing or invalid credit score."
+          },
+          "500": {
+            "description": "Error retrieving risk grade."
+          }
+        }
+      },
+      "post": {
+        "summary": "Upload a new Risk Grade table",
+        "tags": ["Risk Grade"],
+        "description": "Upload a new version of the risk grade table. Optionally, set the new version as the default.",
+        "parameters": [
+          {
+            "name": "data",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "risk_grades": {
+                  "type": "object",
+                  "example": {
+                    "Aaa": { "upper": 850, "lower": 800 },
+                    "Aa1": { "upper": 799, "lower": 770 },
+                    "Aa2": { "upper": 769, "lower": 740 }
+                  }
+                },
+                "description": {
+                  "type": "string",
+                  "example": "Updated risk grades for 2024."
+                },
+                "set_default": { "type": "boolean", "example": true }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Risk grade table uploaded successfully.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Risk grade table uploaded"
+                },
+                "key": { "type": "string", "example": "risk_grade_v5.json" }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing or invalid risk grades data."
+          },
+          "500": {
+            "description": "Error uploading risk grade table."
+          }
+        }
+      }
+    },
+    "/risk-grade/fetch": {
+      "get": {
+        "summary": "Fetch Risk Grades",
+        "tags": ["Risk Grade"],
+        "description": "Fetch all risk grades, optionally filtered by version.",
+        "parameters": [
+          {
+            "name": "risk_grade_version",
+            "in": "query",
+            "required": false,
+            "description": "(Optional) Version of the risk grade table to fetch.",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Risk grades retrieved successfully.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "object"
+              }
+            }
+          },
+          "500": {
+            "description": "Error fetching risk grades."
+          }
+        }
+      }
+    },
+    "/risk-grade/update-default": {
+      "put": {
+        "summary": "Update Default Risk Grade",
+        "tags": ["Risk Grade"],
+        "description": "Update the default risk grade version.",
+        "parameters": [
+          {
+            "name": "data",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "default_risk_file": { "type": "string", "example": "5" }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default risk grade updated successfully.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Default risk grade updated"
+                },
+                "new_default": { "type": "string", "example": "5" }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing or invalid default risk file."
+          },
+          "500": {
+            "description": "Error updating default risk grade."
+          }
+        }
+      }
+    },
+
     "/credit-score-rules/fetch": {
       "get": {
         "summary": "Fetch Credit Score Rules",
@@ -278,124 +566,6 @@
             "apiKeyAuth": []
           }
         ]
-      }
-    },
-    "/source-data": {
-      "post": {
-        "summary": "Get Source Data",
-        "tags": ["Source Data"],
-        "parameters": [
-          {
-            "name": "urls",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "type": "object",
-              "properties": {
-                "urls": {
-                  "type": "array",
-                  "items": { "type": "string" },
-                  "example": [
-                    "https://smu-bucket1.s3.ap-southeast-1.amazonaws.com/CreditEvauation/FinancialStatements/b8d37e2e"
-                  ]
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "type": "object",
-              "example": {
-                "balance_sheet": {
-                  "date": "December 31, 2013",
-                  "assets": {
-                    "current_assets": {
-                      "cash": 2100,
-                      "petty_cash": 100,
-                      "temporary_investments": 10000,
-                      "accounts_receivable_net": 40500,
-                      "inventory": 31000,
-                      "supplies": 3800,
-                      "prepaid_insurance": 1500,
-                      "total_current_assets": 89000
-                    },
-                    "investments": 36000,
-                    "property_plant_equipment": {
-                      "land": 5500,
-                      "land_improvements": 6500,
-                      "buildings": 180000,
-                      "equipment": 201000,
-                      "less_accum_depreciation": -56000,
-                      "net_property_plant_equipment": 337000
-                    },
-                    "intangible_assets": {
-                      "goodwill": 105000,
-                      "trade_names": 200000,
-                      "total_intangible_assets": 305000
-                    },
-                    "other_assets": 3000,
-                    "total_assets": 770000
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/financial-ratio": {
-      "post": {
-        "summary": "Get Financial Ratio",
-        "tags": ["Financial Ratio"],
-        "parameters": [
-          {
-            "name": "source_data",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "type": "object",
-              "example": {
-                "balance_sheet": {
-                  "date": "December 31, 2013",
-                  "assets": {
-                    "current_assets": {
-                      "cash": 2100,
-                      "petty_cash": 100,
-                      "temporary_investments": 10000,
-                      "accounts_receivable_net": 40500,
-                      "inventory": 31000,
-                      "supplies": 3800,
-                      "prepaid_insurance": 1500,
-                      "total_current_assets": 89000
-                    }
-                  }
-                }
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "schema": {
-              "type": "object",
-              "example": {
-                "financial_ratio": {
-                  "accounts_receivable_turnover": 12.35,
-                  "current_ratio": 1.46,
-                  "days_sales_in_accounts_receivable": 29.57,
-                  "days_sales_in_inventory": 29.78,
-                  "inventory_turnover": 12.26,
-                  "quick_ratio": 0.86,
-                  "working_capital": 28000
-                }
-              }
-            }
-          }
-        }
       }
     }
   }

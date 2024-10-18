@@ -31,23 +31,3 @@ def calculate_credit_score(rules_content, financial_ratios):
     credit_score = max(min_credit_score, min(max_credit_score, credit_score))  # Ensure it's within the range 300 to 850
 
     return credit_score
-
-
-def get_credit_grade(score):
-    risk_grades = {
-        "Aaa": { "upper": 850, "lower": 800 },  # Prime
-        "Aa": { "upper": 799, "lower": 750 },   # High quality
-        "A": { "upper": 749, "lower": 700 },    # Upper-medium grade
-        "Baa": { "upper": 699, "lower": 650 },  # Medium grade, investment grade
-        "Ba": { "upper": 649, "lower": 600 },   # Speculative
-        "B": { "upper": 599, "lower": 550 },    # High risk
-        "Caa": { "upper": 549, "lower": 500 },  # Poor quality
-        "Ca": { "upper": 499, "lower": 400 },   # Very near default
-        "C": { "upper": 399, "lower": 0 }       # Default or in default
-    }
-
-    for grade, limits in risk_grades.items():
-        if limits["lower"] <= score <= limits["upper"]:
-            return grade
-
-    return "Grade not found"

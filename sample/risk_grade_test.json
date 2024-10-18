@@ -1,0 +1,23 @@
+{
+  "Aaa": { "upper": 850, "lower": 800 },
+  "Aa1": { "upper": 799, "lower": 770 },
+  "Aa2": { "upper": 769, "lower": 740 },
+  "Aa3": { "upper": 739, "lower": 710 },
+  "A1": { "upper": 709, "lower": 680 },
+  "A2": { "upper": 679, "lower": 650 },
+  "A3": { "upper": 649, "lower": 620 },
+  "Baa1": { "upper": 619, "lower": 590 },
+  "Baa2": { "upper": 589, "lower": 560 },
+  "Baa3": { "upper": 559, "lower": 530 },
+  "Ba1": { "upper": 529, "lower": 500 },
+  "Ba2": { "upper": 499, "lower": 470 },
+  "Ba3": { "upper": 469, "lower": 440 },
+  "B1": { "upper": 439, "lower": 410 },
+  "B2": { "upper": 409, "lower": 380 },
+  "B3": { "upper": 379, "lower": 350 },
+  "Caa1": { "upper": 349, "lower": 320 },
+  "Caa2": { "upper": 319, "lower": 290 },
+  "Caa3": { "upper": 289, "lower": 260 },
+  "Ca": { "upper": 259, "lower": 230 },
+  "C": { "upper": 229, "lower": 0 }
+}

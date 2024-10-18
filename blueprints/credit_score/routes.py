@@ -2,11 +2,11 @@ from . import credit_score_bp
 from flask import request, request, jsonify
 from utils.config import S3
  # Import helper functions
-from helpers.service_helpers import get_source_data, get_financial_ratio, get_rules
+from helpers.service_helpers import get_source_data, get_financial_ratio, get_rules, get_risk_grade
 from helpers.error_helpers import handle_error
 from helpers.s3_helpers.upload_file_helper import upload_file_to_s3
 from helpers.auth_helpers import credit_evaluation_api_key_required
-from .credit_score_service import calculate_credit_score, get_credit_grade
+from .credit_score_service import calculate_credit_score
 S3_FOLDER_NAME = S3["folder_name"]
 RESULTS_SUBFOLDER_NAME = S3["results_subfolder_name"]
 
@@ -36,7 +36,7 @@ def get_credit_score():
 
         credit_score = calculate_credit_score(rules_file_content,financial_ratio)
 
-        risk_grade = get_credit_grade(credit_score)
+        risk_grade = get_risk_grade(credit_score)
 
 
         result = {
