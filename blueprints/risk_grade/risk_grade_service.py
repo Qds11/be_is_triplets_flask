@@ -10,15 +10,16 @@ DEFAULT_RISK_GRADES_FILENAME = S3["default_risk_grades_filename"]
 LATEST_RISK_GRADES_FILENAME = S3["latest_risk_grades_filename"]
 
 
-def get_risk_grade(credit_score, risk_grade_version=None):
+def get_risk_grade(credit_score, risk_grade_version = None):
     """Gets the risk grade for a given credit score."""
     # Fetch the risk grades (default version or provided version)
     data = fetch_risk_grades(risk_grade_version)
+    risk_grade_version = get_default_risk_grade()
     risk_grades = data["risk_grades"]["risk_grades"]
     # Iterate through the risk grade limits and return the appropriate grade
     for grade, limits in risk_grades.items():
         if limits["lower"] <= credit_score <= limits["upper"]:
-            return grade
+            return {"risk_grade": grade, "risk_grade_version":risk_grade_version}
 
     return "Grade not found"
 

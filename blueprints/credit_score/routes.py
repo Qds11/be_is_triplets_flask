@@ -25,12 +25,8 @@ def get_credit_score():
         source_data = get_source_data(urls ) # Call source data module to retrieve raw data from financial statements
         financial_ratio = get_financial_ratio(source_data)  # Call financial ratio module to get return financial ratios
 
-        rules_file_name = None
 
-        if rules_version:
-            rules_file_name =f"rules_v{rules_version}.json"
-
-        rules_file_content = get_rules(rules_file_name) # Call rules module to get rules needed to calculate the credit rating
+        rules_file_content = get_rules(rules_version) # Call rules module to get rules needed to calculate the credit rating
         rules_file_name = rules_file_content["rules_file"]
         rules_file_content = rules_file_content["rules"]["rules"]
 
@@ -44,7 +40,8 @@ def get_credit_score():
             'rules_file_name':rules_file_name,
             'rules':rules_file_content,
             'credit_score': credit_score,
-            'risk_grade': risk_grade,
+            'risk_grade': risk_grade["risk_grade"],
+            'risk_grade_table_version': risk_grade["risk_grade_version"],
             'extracted_data':source_data
         }
 

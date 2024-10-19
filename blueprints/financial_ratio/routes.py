@@ -1,8 +1,10 @@
 from . import financial_ratio_bp
 from flask import jsonify, request
+from helpers.auth_helpers import admin_api_key_required
 from .financial_ratio_service import calculate_financial_ratios  # Import the service
 
 @financial_ratio_bp.route('/', methods=['POST'])
+@admin_api_key_required
 def get_financial_ratio():
     request_data = request.json
     source_data = request_data.get('source_data', None)
